@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 
 # Authentication
 from django.contrib.auth import login as auth_login, logout
-from django.contrib.auth.forms import AuthenticationForm
-from .forms import SignupForm
 from django.contrib.auth.decorators import login_required
+
+#Forms
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import Signup_Form, Resend_Verification_Email_Form
 
 # Messages
 from django.contrib import messages
@@ -24,6 +26,10 @@ from django.urls import reverse
 
 # Models
 from .models import User
+
+#Time
+import time
+from django.utils.timezone import now
 
 # FUNCTIONS
 
@@ -84,14 +90,61 @@ def verify_email(request, uidb64, token):
         # Error handling
         messages.error(request, 'Invalid verification link.')
         return redirect('main')
+
+def resend_verification_email(request):
+    if request.method == 'GET':
+        return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form})
     
+    elif request.method == 'POST':
+        email = request.POST.get('email')
+        if not email:
+            messages.error(request, 'please, send an email.')
+            return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form})
+        
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            messages.error(request, 'This email is not registred.')
+            return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form})
+        
+        if user.is_verified:
+            messages.info(request, 'This email is alredy verify.', {'form': Resend_Verification_Email_Form})
+            return redirect('login')
+        
+        #calls the last time the users send the mail
+        last_sent = request.session.get('last_verification_email_sent', 0)
+
+        #Turns in int
+        try:
+            last_sent = int(last_sent)
+        except (ValueError, TypeError):
+            last_sent = 0
+
+        #calls the current time
+        current_time = int(time.time())  
+
+        #Compares these two times to get an interval of 180 seconds or 3 minuts
+        if current_time - last_sent < 180:
+            #Send a warning only if two mins not passed yet
+            messages.warning(request, '3 mins for can resend the mail.')
+            return redirect('resend-verification')
+        
+        #send the mail
+        send_verification_email(user, request)
+        
+        #Now set the time session with the current time, this works like a for 
+        request.session['last_verification_email_sent'] = int(time.time())
+        
+        messages.success(request, 'The mail has been send, please check your email and check the spam')
+        return redirect('login')
+
 def signup(request):
     if request.method == 'GET':
         return render(request, 'signup.html', {
-            'form': SignupForm(),
+            'form': Signup_Form(),
         })
     else:
-        form = SignupForm(request.POST)
+        form = Signup_Form(request.POST)
         if form.is_valid():
             user = form.save(commit=False)  # Don't save yet
             user.password = make_password(form.cleaned_data['password1'])  # password
@@ -106,7 +159,7 @@ def signup(request):
         else:
             error = 'Invalid form. Please try again.'
             return render(request, 'signup.html', {
-                'form': SignupForm(),
+                'form': Signup_Form(),
                 'error': error
             })
         

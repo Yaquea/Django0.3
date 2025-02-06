@@ -2,7 +2,7 @@ from django import forms
 from .models import User
 
 # Creates a ModelForm class for user signup
-class SignupForm(forms.ModelForm):
+class Signup_Form(forms.ModelForm):
     # Adds two password fields with PasswordInput widgets
     password1 = forms.CharField(widget=forms.PasswordInput, label="Password")
     password2 = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
@@ -29,3 +29,10 @@ class SignupForm(forms.ModelForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("This email address is already in use.")
         return email
+
+class Resend_Verification_Email_Form(forms.ModelForm):
+    class Meta:
+        # Specifies the model to use
+        model = User
+        # Specifies the fields to include in the form
+        fields = ['email']

@@ -1,4 +1,3 @@
-
 {% extends 'layout/nav.html' %}
 
 {% block content %}
@@ -7,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>Resend verification</title>
 </head>
 <body>
     <div>
@@ -18,17 +17,9 @@
             {% csrf_token %}
             {{ form }}
             <button>
-                Save
+                Resend verification
             </button>
         </form>
-    </div>
-    <div>
-        <p>Auth trubles?</p>
-        <form action="{% url 'resend-verification' %}" method="GET">
-            <button>
-            Resend verification
-        </button>
-    </form>
     </div>
 </body>
 </html>
