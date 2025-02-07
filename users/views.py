@@ -97,6 +97,10 @@ def resend_verification_email(request):
     
     elif request.method == 'POST':
         email = request.POST.get('email')
+
+
+
+        
         if not email:
             messages.error(request, 'please, send an email.')
             return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form})
@@ -108,9 +112,10 @@ def resend_verification_email(request):
             return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form})
         
         if user.is_verified:
-            messages.info(request, 'This email is alredy verify.', {'form': Resend_Verification_Email_Form})
+            messages.info(request, 'This email is alredy verify.')
             return redirect('login')
         
+    #Intentar encapsular en una funcion
         #calls the last time the users send the mail
         last_sent = request.session.get('last_verification_email_sent', 0)
 
@@ -199,3 +204,10 @@ def log_out(request):
     # Display a success message after logging out
     messages.success(request, 'You have been logged out successfully.')
     return redirect('main')
+
+    #List
+        #make a limit of resend mails, this must modifies the model
+
+        #The email tokens never expires so XD
+        
+        #put the non views functions on security/functions
