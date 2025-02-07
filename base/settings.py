@@ -51,6 +51,10 @@ MIDDLEWARE = [
     'users.security.middleware.SessionTimeoutMiddleware',
 ]
 
+SESSION_TIMEOUT = 1800  
+SESSION_COOKIE_AGE = SESSION_TIMEOUT
+SESSION_SAVE_EVERY_REQUEST = True 
+
 ROOT_URLCONF = 'base.urls'
 
 TEMPLATES = [
@@ -105,6 +109,8 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
+
+PASSWORD_RESET_TIMEOUT = 160
 
 
 # Password validation
