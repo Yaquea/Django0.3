@@ -1,48 +1,120 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sitio web seguro con autenticación avanzada">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- Bloque para título dinámico -->
+    <title>{% block title %} {{ name }}  ° User app{% endblock %}</title>
+    
+    <!-- Bootstrap CSS con SRI -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+          rel="stylesheet"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer">
+    
 </head>
-<body>
-    <header>
-        <nav> 
-            <ul>
-                <li>
-                    <a href="{% url 'main' %}">Main</a>
-                </li>
 
-                {% if user.is_authenticated %}
-                    <li>
-                        <a href="{% url 'logout' %}"> Log out </a>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar seguro -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'main' %}"> Home </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" 
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                           👤 {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+                                </form>
+                            </li>
+                        </ul>
                     </li>
-
-                {% else %}
-                    <li>
-                        <a href="{% url 'signup' %}">Sign on</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'login' %}">Log in</a>
-                    </li>
-                {% endif %}
-                
-            </ul>
-        </nav>
-    </header>
-    <div>
-        {% block content %}
-        {% endblock %}
-    </div>
-    <footer>
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-        {{ message }}
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Registrarse</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="container flex-grow-1 mt-4">
+        <!-- Mensajes con timeout automático -->
+        <div class="message-container position-fixed top-0 end-0 p-3" style="z-index: 11">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             {% endfor %}
         </div>
-        {% endif %}
+
+        {% block content %}
+        <!-- Contenido específico de cada página -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer seguro -->
+    <footer class="bg-dark text-light mt-auto py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 user app. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-light text-decoration-none">Política de Privacidad</a>
+                    <span class="mx-2">|</span>
+                    <a href="#" class="text-light text-decoration-none">Términos de Servicio</a>
+                </div>
+            </div>
+        </div>
     </footer>
+
+    <!-- Scripts con SRI y política de referrer -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    
+    <!-- Script para auto-cierre de mensajes -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cierra automáticamente los mensajes después de 5 segundos
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    new bootstrap.Alert(alert).close();
+                });
+            }, 5000);
+            
+            // Bloquea el clic derecho como medida de seguridad adicional
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+        });
+    </script>
+    
+    {% block extra_scripts %}
+    <!-- Bloque para scripts adicionales por página -->
+    {% endblock %}
 </body>
 </html>

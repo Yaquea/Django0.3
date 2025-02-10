@@ -30,7 +30,9 @@ def main(request):
     """
     Render the main landing page.
     """
-    return render(request, 'main.html', {})
+    return render(request, 'main.html', {
+        'name': "main"
+    })
 
 def verify_email(request, uidb64, token):
     """
@@ -73,20 +75,28 @@ def resend_verification_email(request):
     verified, and then enforce a limit on the number of resend attempts via the Resend_email_count service.
     """
     if request.method == 'GET':
-        return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form()})
-    
+        return render(request, 'resend_verification.html', {
+                'form': Resend_Verification_Email_Form(),
+                'name': "resend email"
+                })
     elif request.method == 'POST':
         email = request.POST.get('email')
 
         if not email:
             messages.error(request, 'Please provide an email address.')
-            return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form()})
-        
+            return render(request, 'resend_verification.html', {
+                'form': Resend_Verification_Email_Form(),
+                'name': "resend email"
+                })
+    
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             messages.error(request, 'This email is not registered.')
-            return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form()})
+            return render(request, 'resend_verification.html', {
+                'form': Resend_Verification_Email_Form(),
+                'name': "resend email"
+                })
         
         if user.is_verified:
             messages.info(request, 'This email is already verified.')
@@ -108,6 +118,7 @@ def signup(request):
     if request.method == 'GET':
         return render(request, 'signup.html', {
             'form': Signup_Form(),
+            'name': "sign up",
         })
     else:
         form = Signup_Form(request.POST)
@@ -126,7 +137,8 @@ def signup(request):
             error = 'Invalid form. Please try again.'
             return render(request, 'signup.html', {
                 'form': Signup_Form(),
-                'error': error
+                'error': error, 
+                'name': "sign up",
             })
         
 def login(request):
@@ -139,7 +151,8 @@ def login(request):
     """
     if request.method == 'GET':
         return render(request, 'login.html', {
-            'form': AuthenticationForm()
+            'form': AuthenticationForm(),
+            'name': "log in"
         })
     else:
         print(request.POST)
@@ -151,7 +164,8 @@ def login(request):
             if not user.is_verified:
                 messages.error(request, 'Please verify your email address first.')
                 return render(request, 'login.html', {
-                    'form': form
+                    'form': form,
+                    'name': "log in"
                 })
             else:
                 auth_login(request, user)
@@ -163,7 +177,8 @@ def login(request):
             error = "Invalid username or password. Please try again."
             return render(request, 'login.html', {
                 'form': form, 
-                'error': error
+                'error': error,
+                'name': "log in"
             })
 
 @login_required

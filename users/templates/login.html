@@ -2,17 +2,11 @@
 {% extends 'layout/nav.html' %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
-</head>
-<body>
+
     <div>
         {{ error }}
     </div>
+
     <div>
         <form method="post">
             {% csrf_token %}
@@ -22,14 +16,13 @@
             </button>
         </form>
     </div>
+    
     <div>
         <p>Auth trubles?</p>
         <form action="{% url 'resend-verification' %}" method="GET">
             <button>
             Resend verification
-        </button>
-    </form>
+            </button>
+        </form>
     </div>
-</body>
-</html>
 {% endblock %}
