@@ -21,8 +21,9 @@ from django.contrib.auth.hashers import make_password
 from .models import User
 
 # Services
-from .security.services import send_verification_email, Resend_email_count
+from .security.services import send_verification_email, resend_verification_email_cooldown
 
+import time
 # URL Views
 
 def main(request):
@@ -62,6 +63,7 @@ def verify_email(request, uidb64, token):
         messages.error(request, 'Invalid verification link.')
         return redirect('main')
 
+
 def resend_verification_email(request):
     """
     Allow users to request a new verification email.
@@ -71,29 +73,29 @@ def resend_verification_email(request):
     verified, and then enforce a limit on the number of resend attempts via the Resend_email_count service.
     """
     if request.method == 'GET':
-        return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form})
+        return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form()})
     
     elif request.method == 'POST':
         email = request.POST.get('email')
 
         if not email:
             messages.error(request, 'Please provide an email address.')
-            return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form})
+            return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form()})
         
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             messages.error(request, 'This email is not registered.')
-            return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form})
+            return render(request, 'resend_verification.html', {'form': Resend_Verification_Email_Form()})
         
         if user.is_verified:
             messages.info(request, 'This email is already verified.')
             return redirect('login')
         
         # Enforce the limit on resend attempts.
-        Resend_email_count(request, user)
-
+        resend_verification_email_cooldown(request, user)
         return redirect('login')
+
 
 def signup(request):
     """
