@@ -172,7 +172,6 @@ def login(request):
                 messages.success(request, f'Welcome back, {user.username}!')
                 return redirect('main')
         else:
-            print(form.errors)
             # Use a default error message if authentication fails.
             error = "Invalid username or password. Please try again."
             return render(request, 'login.html', {
