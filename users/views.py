@@ -121,7 +121,7 @@ def signup(request):
             'name': "sign up",
         })
     else:
-        form = Signup_Form(request.POST)
+        form = Signup_Form(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)  # Do not immediately save the user to the database.
             user.password = make_password(form.cleaned_data['password1'])  # Hash the password.
@@ -155,7 +155,6 @@ def login(request):
             'name': "log in"
         })
     else:
-        print(request.POST)
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
@@ -190,3 +189,13 @@ def log_out(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully.')
     return redirect('main')
+
+@login_required
+def user_profile(request, user_name):
+    users_owner = User.objects.get(username = user_name)
+    if request.method == ('GET'):
+        return render(request, 'profile.html', {
+            'user_owner':users_owner,
+        })
+    else:
+        pass
