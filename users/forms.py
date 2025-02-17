@@ -61,3 +61,25 @@ class Resend_Verification_Email_Form(forms.ModelForm):
         model = User
         # Specifies the fields to include in the form
         fields = ['email']
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username','first_name', 'last_name', 'email', 'profile_image']
+
+    def clean_profile_image(self):
+        image = self.cleaned_data.get('profile_image')
+
+        if image:
+            max_size = 2 * 1024 * 1024  
+            if image.size > max_size:
+                raise forms.ValidationError("The image must not exceed 2MB.")
+
+            img = Image.open(image)
+            max_width, max_height = 1024, 1024
+            if img.width > max_width or img.height > max_height:
+                raise forms.ValidationError(f"The image must be a maximum of {max_width}x{max_height} pixels.")
+
+        return image
+
