@@ -55,6 +55,7 @@ class Signup_Form(forms.ModelForm):
             raise forms.ValidationError("This email address is already in use.")
         return email
 
+
 class Resend_Verification_Email_Form(forms.ModelForm):
     class Meta:
         # Specifies the model to use

@@ -1,0 +1,6 @@
+Actual bugs:
+
+The session token is getting kicked after 30 seconds.
+The authorization token is invalid, which makes the API request useless.
+The verification email is not working.
+Sometimes, the session token expires the second we log in.
