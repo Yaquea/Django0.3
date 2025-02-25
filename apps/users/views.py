@@ -182,6 +182,7 @@ def login(request):
                 'name': "log in"
             })
 
+#LOGIN REQUIRED 
 
 @login_required
 def log_out(request):

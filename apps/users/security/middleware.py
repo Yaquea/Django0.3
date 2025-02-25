@@ -12,7 +12,7 @@ class SessionTimeoutMiddleware:
             
             if last_activity:
                 idle_time = timezone.now().timestamp() - last_activity
-                if idle_time > 30:  # Tiempo de inactividad en segundos
+                if idle_time > 1800:  # Tiempo de inactividad en segundos
                     logout(request)
                     messages.info(request, 'Your session has been expired.')
                     request.session.flush()
