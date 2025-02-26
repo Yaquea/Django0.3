@@ -1,6 +1,4 @@
 Actual bugs:
 
-The session token is getting kicked after 30 seconds. -fixed it was a config from the middleware
-The authorization token is invalid, which makes the API request useless. -fixed just use another type of authorization on postman
 The resend verification email is not working. (idk why resend verification email require begin a user logged)
 Sometimes, the session token expires the second we log in. (idk)

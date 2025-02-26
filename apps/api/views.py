@@ -1,16 +1,29 @@
 from rest_framework import viewsets, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from users.models import User
-from .serializers import UserSerializer, UserCreateSerializer
+from django.contrib.auth import get_user_model
+from .serializers import UserSerializer, UserCreateSerializer, UserUpdateSerializer
+from .permissions import IsSelf
 
 class UserViewSet(viewsets.ModelViewSet):
+    User = get_user_model()
     queryset = User.objects.all()
     
     def get_serializer_class(self):
-        return UserCreateSerializer if self.action == 'create' else UserSerializer
+    
+        if self.action == 'create':
+            return UserCreateSerializer
+        elif self.action == ['retrieve', 'update', 'partial_update']:
+            return UserUpdateSerializer
+        return UserSerializer
+    
+    def get_permissions(self):
+        # For creating a user, allow any unauthenticated user.
+        if self.action == 'create':
+            return [permissions.AllowAny()]
+        # For admins, allow all actions.
+        elif self.request.user.is_staff:
+            return [permissions.IsAdminUser()]
+        # For actions like retrieve, update, or partial_update, ensure the user is only accessing their own data.
+        elif self.action in ['retrieve', 'update', 'partial_update']:
+            return [permissions.IsAuthenticated(), IsSelf()]
 
-    @action(detail=False, methods=['get'])
-    def me(self, request):
-        serializer = self.get_serializer(request.user)
-        return Response(serializer.data)
+        return [permissions.IsAdminUser()]

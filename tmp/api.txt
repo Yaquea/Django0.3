@@ -1,4 +1,10 @@
-endpoints
+rest API
+ presentencional state transfer
+ Simple/standardized
+ Scale/stateless -> no matter the data state
+
+
+method / endpoints
 GET	/api/users/	list users
 POST	/api/users/	create new user
 GET	/api/users/{id}/	user details
