@@ -5,6 +5,9 @@ from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_delete
 
 class User(AbstractUser):
+
+    # Adds an extra fields to Django user model
+
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
     mails_count = models.IntegerField(default=0)

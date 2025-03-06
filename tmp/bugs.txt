@@ -1,4 +1,0 @@
-Actual bugs:
-
-The resend verification email is not working. (idk why resend verification email require begin a user logged)
-Sometimes, the session token expires the second we log in. (idk)

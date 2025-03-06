@@ -7,5 +7,9 @@ User = get_user_model()
 
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
+    """
+    create a personal auth token to new users
+    
+    """
     if created:
         Token.objects.create(user=instance)

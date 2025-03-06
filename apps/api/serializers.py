@@ -12,7 +12,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
     
     def validate_profile_image(self, value):
-        # 1. Validate file size (max 2MB)
+        # 1. Validate file size
         max_size = 2 * 1024 * 1024  # 2 MB
         if value.size > max_size:
             raise serializers.ValidationError("Profile image file size should not exceed 2MB.")
@@ -44,12 +44,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return instance
     
     def validate_profile_image(self, value):
-        # 1. Validate file size (max 2MB)
+        # 1. Validate file size
         max_size = 2 * 1024 * 1024  # 2 MB
         if value.size > max_size:
             raise serializers.ValidationError("Profile image file size should not exceed 2MB.")
         
-        # 2. Validate image dimensions using PIL
+        # 2. Validate image dimensions
         try:
             img = Image.open(value)
             max_width = 1024

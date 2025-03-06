@@ -1,16 +1,18 @@
 
 {% extends 'layout/nav.html' %}
 
+<!-- Content block for individual page content -->
 {% block content %}
 
     <div>
+        <!-- display an error message-->
         {{ error }}
     </div>
 
     <div>
         <form method="post">
             {% csrf_token %}
-            {{ form }}
+            {{ form.as_p }}
             <button>
                 Save
             </button>
@@ -18,6 +20,7 @@
     </div>
     
     <div>
+        <!-- redirect to resend verification view -->
         <p>Auth trubles?</p>
         <form action="{% url 'resend-verification' %}" method="GET">
             <button>

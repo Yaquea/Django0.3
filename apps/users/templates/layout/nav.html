@@ -1,16 +1,17 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
+    <!-- Metadata and page title -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sitio web seguro con autenticación avanzada">
+    <meta name="description" content="My secure Django app: this is the general navigation for the users app.">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
-    <!-- Bloque para título dinámico -->
+    <!-- Title block: dynamically displays the page title -->
     <title>{% block title %} {{ name }}  ° User app{% endblock %}</title>
     
-    <!-- Bootstrap CSS con SRI -->
+    <!-- Bootstrap CSS from CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
           rel="stylesheet"
           crossorigin="anonymous"
@@ -19,62 +20,71 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <!-- Navbar seguro -->
+    
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'main' %}"> Home </a>
+            <!-- Home link -->
+            <a class="navbar-brand" href="{% url 'main' %}">Home</a>
             
+            <!-- Responsive navbar toggler -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" 
                     aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
+            <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
+                    <!-- Dropdown menu for authenticated users -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" 
                            data-bs-toggle="dropdown" aria-expanded="false">
                            <div class="container">
                             <div class="row">
-                            <div class="col"> 
-                            {{ user.first_name }} {{ user.last_name }}
-                           </div>
-                           <div class="col"> 
-                            {% if user.profile_image %}
-                              <img src="{{ user.profile_image.url }}" 
-                                   alt="{{ user.first_name }}'s profile image" 
-                                   class="rounded-circle" 
-                                   style="width: 40px; height: 40px; object-fit: cover;">
-                            {% else %}
-                              <!-- Opcional: imagen o ícono por defecto si no hay avatar -->
-                              <div class="bg-secondary rounded-circle" 
-                                   style="width: 40px; height: 40px;"></div>
-                            {% endif %}
-                           </div>
+                                <!-- Display user's full name -->
+                                <div class="col"> 
+                                    {{ user.first_name }} {{ user.last_name }}
+                                </div>
+                                <!-- Display user's profile image if available -->
+                                <div class="col"> 
+                                    {% if user.profile_image %}
+                                      <img src="{{ user.profile_image.url }}" 
+                                           alt="{{ user.first_name }}'s profile image" 
+                                           class="rounded-circle" 
+                                           style="width: 40px; height: 40px; object-fit: cover;">
+                                    {% else %}
+                                      <div class="bg-secondary rounded-circle" 
+                                           style="width: 40px; height: 40px;"></div>
+                                    {% endif %}
+                                </div>
                             </div>
                            </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/{{ user.username }}/">Mi Perfil</a></li>
+                            <!-- Translated from "Mi Perfil" to "My Profile" -->
+                            <li><a class="dropdown-item" href="/{{ user.username }}/">My Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="post" action="{% url 'logout' %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+                                    <button type="submit" class="dropdown-item">Log out</button>
                                 </form>
                             </li>
                         </ul>
                     </li>
                     {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Registrarse</a></li>
+                    <!-- Links for non-authenticated users -->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log in</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Sign up</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- SVG icon definitions for alerts -->
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
         <symbol id="check-circle-fill" viewBox="0 0 16 16">
           <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
@@ -85,88 +95,94 @@
         <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
           <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
         </symbol>
-      </svg>
+    </svg>
 
+    <!-- Main content container -->
     <main class="container flex-grow-1 mt-4" style="background-image: radial-gradient();">
-        <!-- Mensajes con timeout automático -->
+        
+        <!-- Message container for displaying alerts -->
         <div class="message-container position-fixed top-0 end-0 p-3" style="z-index: 11">
             {% if messages %}
             {% for message in messages %}
                 {% if 'success' in message.tags %}
                     <div class="alert alert-success d-flex align-items-center" role="alert">
                         <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-                            <div>
-                                {{ message }}
-                            </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div>
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% elif 'error' in message.tags %}
                     <div class="alert alert-warning d-flex align-items-center" role="alert">
                         <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                            <div>
-                                {{ message }}
-                            </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div>
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% elif 'warning' in message.tags %}
                     <div class="alert alert-danger d-flex align-items-center" role="alert">
                         <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                            <div>
-                                {{ message }}
-                            </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div>
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% elif 'info' in message.tags %}
                     <div class="alert alert-primary d-flex align-items-center" role="alert">
                         <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-                            <div>
-                                {{ message }}
-                            </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div>
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% else %}
                     <div class="alert alert-primary d-flex align-items-center" role="alert">
                         <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-                            <div>
-                                {{ message }}
-                            </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div>
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% endif %}
             {% endfor %}
-        {% endif %}
+            {% endif %}
         </div>
 
+        <!-- Content block for individual page content -->
         {% block content %}
-        <!-- Contenido específico de cada página -->
+        
         {% endblock %}
     </main>
 
-    <!-- Footer seguro -->
+    <!-- Footer Section -->
     <footer class="bg-dark text-light mt-auto py-3">
         <div class="container">
             <div class="row">
+                <!-- Copyright and license info -->
                 <div class="col-md-6">
-                    <p class="mb-0">&copy; 2025 user app. Todos los derechos reservados.</p>
+                    <p class="mb-0">&copy; 2025 user app. MIT license</p>
                 </div>
+                <!-- Footer navigation links (translated) -->
                 <div class="col-md-6 text-end">
-                    <a href="#" class="text-light text-decoration-none">Política de Privacidad</a>
+                    <!-- "Privacity politics" translated to "Privacy Policy" -->
+                    <a href="#" class="text-light text-decoration-none">Privacy Policy</a>
                     <span class="mx-2">|</span>
-                    <a href="#" class="text-light text-decoration-none">Términos de Servicio</a>
+                    <!-- "Service terms" translated to "Terms of Service" -->
+                    <a href="#" class="text-light text-decoration-none">Terms of Service</a>
                 </div>
             </div>
         </div>
     </footer>
-
-    <!-- Scripts con SRI y política de referrer -->
+    
+    <!-- Bootstrap JS Bundle from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
     
-    <!-- Script para auto-cierre de mensajes -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Cierra automáticamente los mensajes después de 5 segundos
+            // Close alerts after 5 seconds
             setTimeout(() => {
                 const alerts = document.querySelectorAll('.alert');
                 alerts.forEach(alert => {
@@ -174,15 +190,16 @@
                 });
             }, 5000);
             
-            // Bloquea el clic derecho como medida de seguridad adicional
+            // Prevent right-click context menu
             document.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
             });
         });
     </script>
     
+    <!-- Extra scripts block for additional page-specific scripts -->
     {% block extra_scripts %}
-    <!-- Bloque para scripts adicionales por página -->
+    <!-- Extra scripts block -->
     {% endblock %}
 </body>
 </html>

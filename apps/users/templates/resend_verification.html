@@ -1,5 +1,6 @@
 {% extends 'layout/nav.html' %}
 
+<!-- Content block for individual page content -->
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -9,13 +10,14 @@
     <title>Resend verification</title>
 </head>
 <body>
+    <!-- display an error message -->
     <div>
         {{ error }}
     </div>
     <div>
         <form method="post">
             {% csrf_token %}
-            {{ form }}
+            {{ form.as_p }}
             <button>
                 Resend verification
             </button>

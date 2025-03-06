@@ -7,5 +7,5 @@ router.register(r'users', views.UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('auth/', include('rest_framework.urls')),  # Login/Logout en el navegador
+    path('auth/', include('rest_framework.urls')), 
 ]

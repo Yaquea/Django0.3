@@ -5,7 +5,6 @@ class IsSelf(permissions.BasePermission):
     Custom permission that allows users to view/modify only their own information.
 
     Usage: Verifies if the requested object belongs to the authenticated user.
-    Typically used in detail views (retrieve/update/delete actions).
     
     Parameters:
         request (HttpRequest): Contains request metadata and authenticated user
