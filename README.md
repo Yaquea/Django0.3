@@ -6,6 +6,7 @@
   - Email verification using Gmail SMTP
   - Session management with timeout middleware
   - System feedback through user notification messages
+  - It doesn't have any asynchronous utilities
 
 - **Security**  
   - Credential management using Python Decouple
@@ -15,17 +16,19 @@
 - **API Endpoints**  
   Full RESTful API built with Django Rest Framework:
   ```
-  │ Method   │ Endpoint              │ Description                │
-  ├──────────┼───────────────────────┼────────────────────────────┤
-  │ GET      │ /api/users/           │ List all users             │
-  │ POST     │ /api/users/           │ Create new user            │
-  │ GET      │ /api/users/{id}/      │ Get user details           │
-  │ PUT      │ /api/users/{id}/      │ Update user                │
-  │ DELETE   │ /api/users/{id}/      │ Delete user                │
+  │ Method   │ Endpoint              │ Description                      │
+  ├──────────┼───────────────────────┼──────────────────────────────────┤
+  │ GET      │ /api/users/           │ List all users                   │
+  │ POST     │ /api/users/           │ Create new user                  │
+  │ GET      │ /api/users/{id}/      │ Get user details                 │
+  │ PUT      │ /api/users/{id}/      │ Update user                      │
+  │ DELETE   │ /api/users/{id}/      │ Delete user                      │
+  │ GET      │ /api/users/me/        │ Get authenticated user's profile │
   ```
 
 - **Frontend**  
   - Basic Bootstrap integration
+  - nonasycronus
   - Static file management
 
 ## Technology Stack
