@@ -1,0 +1,14 @@
+{% extends 'layout/nav.html' %}
+
+<!-- Content block for individual page content -->
+{% block content %}
+<div>
+    <!-- Display an error message -->
+    {{ error }}
+</div>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

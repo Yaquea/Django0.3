@@ -1,7 +1,16 @@
 # Django 0.81
 
----
+## Bugs
+The resend verification email is not working.
 
-## Users App
 
-The Django Users App is under development on the `feature/usersapp` branch. Commits are made following Git Flow standards.
+## Rest API Endpoints
+GET -> list users ->	/api/users/	
+
+POST ->	create new user ->  /api/users/	
+
+GET -> user details ->	/api/users/{id}/	
+
+PUT -> update user ->	/api/users/{id}/	
+
+DELETE -> delete user ->	/api/users/{id}/
