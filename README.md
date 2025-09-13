@@ -1,4 +1,4 @@
-# Django 0.81
+# Django 0.3
 **A comprehensive user management application with REST API capabilities**
 
 ## Features
